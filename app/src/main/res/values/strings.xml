@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name" translatable="false">semestralka_pokus</string>
+    <string name="measure" translatable="false">změřit</string>
+    <string name="NEW">NEW</string>
+    <string name="LOAD">LOAD</string>
+    <string name="lattitude">TextView</string>
+    <string name="area">area</string>
+    <string name="pridat">Pridat</string>
+    <string name="spocitat">Spocitat</string>
+    <string name="zpet">Zpet</string>
+    <string name="znovu">Znovu</string>
+    <string name="count">Count:</string>
+    <string name="areaLabel">Area:</string>
+    <string name="area_value">area_value</string>
+    <string name="count_value">count_value</string>
+    <string name="vlastn_n_pole">Vlastněná pole</string>
+    <string name="settings">SETTINGS</string>
+    <string name="string_settings" />
+    <string name="pole">POLE</string>
+    <string name="novy">NOVY</string>
+    <string name="title_activity_substractions">Leanback Substractions</string>
+    <string name="browse_title">Videos by Your Company</string>
+    <string name="related_movies">Related Videos</string>
+    <string name="grid_view">Grid View</string>
+    <string name="error_fragment">Error Fragment</string>
+    <string name="personal_settings">Personal Settings</string>
+    <string name="watch_trailer_1">Watch trailer</string>
+    <string name="watch_trailer_2">FREE</string>
+    <string name="rent_1">Rent By Day</string>
+    <string name="rent_2">From $1.99</string>
+    <string name="buy_1">Buy and Own</string>
+    <string name="buy_2">AT $9.99</string>
+    <string name="movie">Movie</string>
+
+    <!-- Error messages -->
+    <string name="error_fragment_message">An error occurred</string>
+    <string name="dismiss_error">Dismiss</string>
+    <string name="title_activity_substance">Substance</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="pripravky">PRIPRAVKY</string>
+    <string name="odebrat">ODEBRAT</string>
+    <string name="textview1">textview</string>
+    <string name="textview2">textview</string>
+    <string name="textview3">textview</string>
+    <string name="textview4">textview</string>
+    <string name="textview5">textview</string>
+    <string name="textview6">textview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pocet">POCET:</string>
+    <string name="obvod">OBVOD:</string>
+    <string name="perim_value">perim_value</string>
+    <string name="obsah">obsah:</string>
+    <string name="obsah_">OBSAH:</string>
+    <string name="vybrat">vybrat</string>
+    <string name="odstranit">odstranit</string>
+    <string name="todo">TODO</string>
+</resources>
