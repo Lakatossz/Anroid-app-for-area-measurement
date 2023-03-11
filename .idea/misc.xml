@@ -5,15 +5,23 @@
       <map>
         <entry key="app/src/main/res/layout/activity_details.xml" value="0.9" />
         <entry key="app/src/main/res/layout/activity_field.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_fields.xml" value="0.1371640407784986" />
+        <entry key="app/src/main/res/layout/activity_fields.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_load.xml" value="0.15606242496998798" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_locator.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main1.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main_1.xml" value="0.17571611799914494" />
+        <entry key="app/src/main/res/layout/activity_map_location.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_new_measure.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_substances.xml" value="0.20470262793914246" />
         <entry key="app/src/main/res/layout/activity_substractions.xml" value="0.17657118426678067" />
+        <entry key="app/src/main/res/layout/content_locator.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/field_record.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_first2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.1" />
         <entry key="app/src/main/res/layout/substance_record.xml" value="0.5" />
       </map>
     </option>

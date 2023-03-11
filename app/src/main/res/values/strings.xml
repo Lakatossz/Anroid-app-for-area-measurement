@@ -62,4 +62,24 @@
     <string name="vybrat">vybrat</string>
     <string name="odstranit">odstranit</string>
     <string name="todo">TODO</string>
+    <string name="title_activity_main1">Main1Activity</string>
+    <string name="lokator">lokátor</string>
+    <string name="title_activity_locator">LocatorActivity</string>
+    <string name="longitude">longitude</string>
+    <string name="longitude_value">longitude_value</string>
+    <string name="lattitude_value">lattitude_value</string>
+    <string name="cas">cas</string>
+    <string name="time_value">time_value</string>
+    <string name="time">time</string>
+    <string name="spustit">spustit</string>
+    <string name="zastavit">zastavit</string>
+    <string name="connect">connect</string>
+    <string name="disconnect">disconnect</string>
+    <string name="home">home</string>
+    <string name="search">search</string>
+    <string name="stop">stop</string>
+    <string name="title_activity_map_location">MapLocationActivity</string>
+    <string name="back">back</string>
+    <string name="map">map</string>
+    <string name="label">label</string>
 </resources>

@@ -22,7 +22,7 @@
             android:textAlignment="gravity" />
 
         <TextView
-            android:id="@+id/tv_area_label"
+            android:id="@+id/tv_long_label"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_weight="1"

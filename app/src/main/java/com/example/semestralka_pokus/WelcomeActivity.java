@@ -1,8 +1,5 @@
 package com.example.semestralka_pokus;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,7 +8,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.example.semestralka_pokus.field.FieldsActivity;
+import com.example.semestralka_pokus.gps_locator.LocatorActivity;
 import com.example.semestralka_pokus.measure.MeasureActivity;
 
 /**
@@ -19,7 +20,7 @@ import com.example.semestralka_pokus.measure.MeasureActivity;
  */
 public class WelcomeActivity extends AppCompatActivity {
 
-    public Button newButton, fieldsButton;
+    public Button newButton, fieldsButton, locatorButton;
 
     /**
      * Zobrazi uvodni aktivitu aplikace.
@@ -39,6 +40,10 @@ public class WelcomeActivity extends AppCompatActivity {
         fieldsButton.setOnClickListener(v -> openFieldsActivity());
         fieldsButton.setBackgroundColor(Color.GREEN);
 
+        locatorButton = findViewById(R.id.locatorButton);
+        locatorButton.setOnClickListener(v -> openLocatorActivity());
+        locatorButton.setBackgroundColor(Color.GREEN);
+
         if (ActivityCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 2);
         }
@@ -57,6 +62,11 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     public void openFieldsActivity() {
         Intent intent = new Intent(this, FieldsActivity.class);
+        startActivity(intent);
+    }
+
+    public void openLocatorActivity() {
+        Intent intent = new Intent(this, LocatorActivity.class);
         startActivity(intent);
     }
 }

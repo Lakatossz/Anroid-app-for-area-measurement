@@ -1,7 +1,5 @@
 package com.example.semestralka_pokus.measure;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -13,11 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.semestralka_pokus.gps.GPSTracker;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.semestralka_pokus.R;
 import com.example.semestralka_pokus.WelcomeActivity;
 import com.example.semestralka_pokus.field.Field;
 import com.example.semestralka_pokus.field.FieldsAdapter;
+import com.example.semestralka_pokus.gps_tracker.GPSTracker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class MeasureActivity extends AppCompatActivity {
 
 //        gpsTracker = new GPSTracker(MeasureActivity.this);
 
-        tv_areaLabel = findViewById(R.id.tv_area_label);
+        tv_areaLabel = findViewById(R.id.tv_long_label);
         tv_area = findViewById(R.id.tv_area);
         tv_perimLabel = findViewById(R.id.tv_perim_label);
         tv_perim = findViewById(R.id.tv_perim);

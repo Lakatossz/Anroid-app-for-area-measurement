@@ -7,21 +7,34 @@
     tools:context=".WelcomeActivity">
 
     <Button
+        android:id="@+id/locatorButton"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="64dp"
+        android:text="@string/lokator"
+        app:layout_constraintBottom_toTopOf="@+id/guideline17"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline14"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/guideline15" />
+
+    <Button
         android:id="@+id/fieldsButton"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="36dp"
         android:text="@string/pole"
+        app:layout_constraintBottom_toTopOf="@+id/locatorButton"
         app:layout_constraintDimensionRatio="2:1"
-        app:layout_constraintBottom_toTopOf="@+id/guideline17"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/guideline15" />
 
     <Button
         android:id="@+id/newButton"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="36dp"
         android:text="@string/novy"
         app:layout_constraintBottom_toTopOf="@+id/fieldsButton"
         app:layout_constraintDimensionRatio="2:1"
@@ -61,12 +74,13 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/todo"
         app:layout_constraintDimensionRatio="2:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline14"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline15"
         app:layout_constraintTop_toTopOf="@+id/guideline16"
-        app:srcCompat="@drawable/ic_tractor_remix"
-        android:contentDescription="@string/todo" />
+        app:srcCompat="@drawable/ic_tractor_remix" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

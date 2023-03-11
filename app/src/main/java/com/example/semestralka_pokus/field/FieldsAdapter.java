@@ -42,7 +42,7 @@ public class FieldsAdapter extends RecyclerView.Adapter<FieldsAdapter.FieldsView
             super(itemView);
 
             tv_fieldName_label = itemView.findViewById(R.id.tv_fieldName_label);
-            tv_area_label = itemView.findViewById(R.id.tv_area_label);
+            tv_area_label = itemView.findViewById(R.id.tv_long_label);
             tv_perimeter_label = itemView.findViewById(R.id.tv_perim_label);
             tv_fieldName_value = itemView.findViewById(R.id.tv_fieldName_value);
             tv_area_value = itemView.findViewById(R.id.tv_area_value);

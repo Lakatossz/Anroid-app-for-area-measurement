@@ -1,9 +1,8 @@
-package com.example.semestralka_pokus.gps;
+package com.example.semestralka_pokus.gps_tracker;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,8 +13,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-
-import com.example.semestralka_pokus.measure.MeasureActivity;
 
 public class GPSTracker extends Service implements LocationListener {
 
