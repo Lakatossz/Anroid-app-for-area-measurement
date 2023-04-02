@@ -79,6 +79,11 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".gps_locator.GPSLocatorService"
+            android:enabled="true"
+            tools:ignore="Instantiatable" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

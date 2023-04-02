@@ -22,11 +22,15 @@ public class LocatorActivity extends AppCompatActivity {
 
     LocatorThread thread;
 
-    private TextView label, longLabel, longValue, latLabel, latValue, timeLabel, timeValue;
+    private TextView longValue;
+    private TextView latValue;
+    private TextView timeValue;
 
-    private Button searchButton, disconnectButton, homeButton, mapButton, stopButton;
-    private double lon, lat;
+    private Button searchButton;
+    private Button disconnectButton;
     private LocalDateTime localDateTime;
+
+    private AlarmHandler alarmHandler;
 
     /**
      * Vytvori a zobrazi aktivitu.
@@ -37,22 +41,22 @@ public class LocatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locator);
 
-        label = findViewById(R.id.label);
-        longLabel = findViewById(R.id.tv_long_label);
+        TextView label = findViewById(R.id.label);
+        TextView longLabel = findViewById(R.id.tv_long_label);
         longValue = findViewById(R.id.tv_long);
-        latLabel = findViewById(R.id.tv_lat_label);
+        TextView latLabel = findViewById(R.id.tv_lat_label);
         latValue = findViewById(R.id.tv_lat);
-        timeLabel = findViewById(R.id.tv_timeLabel);
+        TextView timeLabel = findViewById(R.id.tv_timeLabel);
         timeValue = findViewById(R.id.tv_time);
         searchButton = findViewById(R.id.button_search);
         searchButton.setBackgroundColor(Color.argb(255, 118, 118, 255));
         disconnectButton = findViewById(R.id.button_disconnect);
         setClickabiltyDisconnectButton(false);
-        homeButton = findViewById(R.id.button_home);
+        Button homeButton = findViewById(R.id.button_home);
         homeButton.setBackgroundColor(Color.argb(255, 118, 118, 255));
-        mapButton = findViewById(R.id.button_map);
+        Button mapButton = findViewById(R.id.button_map);
         mapButton.setBackgroundColor(Color.argb(255, 118, 118, 255));
-        stopButton = findViewById(R.id.button_stop);
+        Button stopButton = findViewById(R.id.button_stop);
         stopButton.setBackgroundColor(Color.argb(255, 118, 118, 255));
 
         label.setText("Posledni poloha");
@@ -66,10 +70,14 @@ public class LocatorActivity extends AppCompatActivity {
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))));
         }
 
-        thread = new LocatorThread(this);
+        AlarmHandler alarmHandler = new AlarmHandler(this);
+        alarmHandler.cancelAlarmManager();
+
+//        thread = new LocatorThread(this);
 
         searchButton.setOnClickListener(view -> {
-            thread.run();
+//            thread.run();
+            alarmHandler.setAlarmManager();
             setClickabiltyDisconnectButton(false);
             setClickabiltySearchButton(false);
             Log.d("THREAD_START", "Vlakno pro lokator bylo spusteno.");
@@ -77,6 +85,7 @@ public class LocatorActivity extends AppCompatActivity {
 
         disconnectButton.setOnClickListener(view -> {
             Log.d("SCAN", "Koncim.");
+            alarmHandler.cancelAlarmManager();
             setClickabiltyDisconnectButton(false);
             setClickabiltySearchButton(true);
             Log.d("THREAD_CANCEL", "Vlakno pro lokator bylo ukonceno.");
@@ -130,21 +139,11 @@ public class LocatorActivity extends AppCompatActivity {
     }
 
     public void setLocation(float longitude, float latitude) {
-        lon = longitude;
-        lat = latitude;
-        longValue.setText(String.valueOf(lon));
-        latValue.setText(String.valueOf(lat));
+        longValue.setText(String.valueOf((double) longitude));
+        latValue.setText(String.valueOf((double) latitude));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             timeValue.setText(String.valueOf(LocalDateTime.now()
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))));
         }
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
     }
 }
