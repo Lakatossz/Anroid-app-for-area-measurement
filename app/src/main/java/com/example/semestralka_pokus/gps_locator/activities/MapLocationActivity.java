@@ -1,4 +1,4 @@
-package com.example.semestralka_pokus.gps_locator;
+package com.example.semestralka_pokus.gps_locator.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,23 +20,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private double lat = 0, lon = 0;
+    private double lat = 50, lon = 50;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle b = getIntent().getExtras();
-        if (b != null) {
-            lat = b.getDouble("lat");
-            lon = b.getDouble("lon");
+        if (savedInstanceState == null) {
+            Bundle b = getIntent().getExtras();
+            if (b != null) {
+                lat = Double.parseDouble(b.getString("lat"));
+                lon = Double.parseDouble(b.getString("lon"));
+            }
+        } else {
+            lat = (double) savedInstanceState.getSerializable("lat");
+            lon = (double) savedInstanceState.getSerializable("lon");
         }
 
-        TextView longValue = findViewById(R.id.longitude);
-        TextView latValue = findViewById(R.id.lattitude);
-        TextView longLabel = findViewById(R.id.tv_long_label);
-        TextView latLabel = findViewById(R.id.tv_lat_label);
+        setContentView(R.layout.activity_map_location);
+
+        TextView longValue = findViewById(R.id.map_longitude);
+        TextView latValue = findViewById(R.id.map_lattitude);
+        TextView longLabel = findViewById(R.id.map_tv_long_label);
+        TextView latLabel = findViewById(R.id.map_tv_lat_label);
         longValue.setText(String.valueOf(lon));
         latValue.setText(String.valueOf(lat));
         longLabel.setText("Zemepisna delka");

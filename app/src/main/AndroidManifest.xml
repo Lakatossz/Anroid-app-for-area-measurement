@@ -44,11 +44,11 @@
             android:value="AIzaSyDQKA05Botia4qt-j-YEutHNjFUKS89PyM" />
 
         <activity
-            android:name=".gps_locator.MapLocationActivity"
+            android:name=".gps_locator.activities.MapLocationActivity"
             android:exported="false"
             android:label="@string/title_activity_map_location" />
         <activity
-            android:name=".gps_locator.LocatorActivity"
+            android:name=".gps_locator.activities.LocatorActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
@@ -79,10 +79,9 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".gps_locator.GPSLocatorService"
-            android:enabled="true"
-            tools:ignore="Instantiatable" />
+        <service
+            android:name=".gps_locator.activities.LocatorActivity$LocatorJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"> </service>
 
         <meta-data
             android:name="preloaded_fonts"

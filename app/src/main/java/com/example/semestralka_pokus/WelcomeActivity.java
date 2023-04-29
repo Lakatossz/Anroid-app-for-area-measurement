@@ -7,12 +7,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.semestralka_pokus.field.FieldsActivity;
-import com.example.semestralka_pokus.gps_locator.LocatorActivity;
+import com.example.semestralka_pokus.gps_locator.activities.LocatorActivity;
 import com.example.semestralka_pokus.measure.MeasureActivity;
 
 /**
@@ -67,6 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void openLocatorActivity() {
         Intent intent = new Intent(this, LocatorActivity.class);
+        Toast.makeText(this, "Přepnul jsem do Tracker modu.", Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
 }
