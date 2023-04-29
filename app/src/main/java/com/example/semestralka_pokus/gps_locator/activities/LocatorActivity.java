@@ -55,6 +55,8 @@ public class LocatorActivity extends AppCompatActivity {
 
     LocatorActivity activity = this;
 
+    Float lon, lat;
+
     @SuppressLint("StaticFieldLeak")
     public static BTNetwork network;
 
@@ -83,10 +85,8 @@ public class LocatorActivity extends AppCompatActivity {
         /* */
         public BluetoothLeScanner bluetoothLeScanner;
 
-        /* Nalezene zarizeni. */
+        /* Nalezena zarizeni. */
         public BluetoothDevice discoveredDevice;
-
-        private Context context;
 
         public BTNetwork() {
         }
@@ -268,9 +268,17 @@ public class LocatorActivity extends AppCompatActivity {
                 Log.d("ALARM", characteristic.getStringValue(0));
                 activity.runOnUiThread(() -> {
                     String read_value = characteristic.getStringValue(0);
-                    String[] values = read_value.split("\\|");
-                    Log.d(LOG_HEAD, read_value);
-                    activity.setLocation(Float.parseFloat(values[0]), Float.parseFloat(values[1]));
+                    if (read_value.startsWith("T")) {
+                        Log.d(LOG_HEAD, read_value);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            activity.setTime(LocalDateTime.parse(read_value.substring(1),
+                                    DateTimeFormatter.ofPattern("yyyy-MM-dd|HH:mm:ss")));
+                        }
+                    } else if (read_value.startsWith("L")) {
+                        String[] values = read_value.substring(1).split("\\|");
+                        Log.d(LOG_HEAD, read_value);
+                        activity.setLocation(Float.parseFloat(values[1]), Float.parseFloat(values[0]));
+                    }
                 });
             }
         };
@@ -287,17 +295,13 @@ public class LocatorActivity extends AppCompatActivity {
             AsyncTask.execute(() -> {
                 if (ActivityCompat.checkSelfPermission(activity.getApplicationContext()
                         , Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_DENIED) {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
                         ActivityCompat.requestPermissions(activity,
                                 new String[]{Manifest.permission.BLUETOOTH_SCAN},
                                 PERMISSION_REQUEST_BLUETOOTH);
                     }
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
                         bluetoothLeScanner.startScan(List.of(new ScanFilter.Builder()
                                         .setServiceUuid(new ParcelUuid(SERVICE_ID))
                                         .build()),
@@ -332,7 +336,6 @@ public class LocatorActivity extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(activity.getApplicationContext(),
                     Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 if (bluetoothGatt != null) {
-                    /* TODO muze byt null. */
                     Log.d(LOG_HEAD, "Odpojuji zarizeni.");
                     bluetoothGatt.disconnect();
                 }
@@ -346,7 +349,7 @@ public class LocatorActivity extends AppCompatActivity {
         public static void scheduleJob(Context context) {
             ComponentName serviceComponent = new ComponentName(context, LocatorJobService.class);
             JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-            if (network.intialize()) {
+            if (network != null && network.intialize()) {
                 network.startScanning();
             }
             builder.setMinimumLatency(1000); // wait at least
@@ -354,7 +357,7 @@ public class LocatorActivity extends AppCompatActivity {
             builder.setRequiresDeviceIdle(true); // device should be idle
             builder.setRequiresCharging(false); // we don't care if the device is charging or not
             builder.build();
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 Log.d("BLE", "Zavolal jsem to.");
                 JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
                 jobScheduler.schedule(builder.build());
@@ -432,6 +435,7 @@ public class LocatorActivity extends AppCompatActivity {
 
         disconnectButton.setOnClickListener(view -> {
             Log.d("SCAN", "Koncim.");
+            network.disconnectDevice();
             setClickabiltyDisconnectButton(false);
             setClickabiltySearchButton(true);
             Log.d("THREAD_CANCEL", "Vlakno pro lokator bylo ukonceno.");
@@ -462,8 +466,8 @@ public class LocatorActivity extends AppCompatActivity {
     public void openMapActivity() {
         Intent intent = new Intent(LocatorActivity.this, MapLocationActivity.class);
 //        Bundle b = new Bundle();
-        intent.putExtra("lat", Double.valueOf(60).toString());
-        intent.putExtra("lon", Double.valueOf(60).toString());
+        intent.putExtra("lat", Double.valueOf(lat).toString());
+        intent.putExtra("lon", Double.valueOf(lon).toString());
 //        b.putDouble("lon", 60);
         startActivity(intent);
         finish();
@@ -486,11 +490,15 @@ public class LocatorActivity extends AppCompatActivity {
     }
 
     public void setLocation(float longitude, float latitude) {
+        lon = longitude;
+        lat = latitude;
         longValue.setText(String.valueOf((double) longitude));
         latValue.setText(String.valueOf((double) latitude));
+    }
+
+    public void setTime(LocalDateTime dateTime) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            timeValue.setText(String.valueOf(LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))));
+            timeValue.setText(String.valueOf(dateTime));
         }
     }
 }
