@@ -2,10 +2,6 @@ package com.example.semestralka_pokus.gps_locator.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.job.JobInfo;
-import android.app.job.JobParameters;
-import android.app.job.JobScheduler;
-import android.app.job.JobService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -18,7 +14,6 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,14 +22,22 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.work.BackoffPolicy;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.example.semestralka_pokus.R;
 import com.example.semestralka_pokus.WelcomeActivity;
@@ -43,6 +46,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class LocatorActivity extends AppCompatActivity {
 
@@ -53,7 +57,13 @@ public class LocatorActivity extends AppCompatActivity {
     private Button searchButton;
     private Button disconnectButton;
 
+    String TAG_LOCATOR = "TAG";
+
     LocatorActivity activity = this;
+
+    Handler handler;
+
+    WorkManager workManager;
 
     Float lon, lat;
 
@@ -89,6 +99,7 @@ public class LocatorActivity extends AppCompatActivity {
         public BluetoothDevice discoveredDevice;
 
         public BTNetwork() {
+
         }
 
         public boolean intialize() {
@@ -290,8 +301,6 @@ public class LocatorActivity extends AppCompatActivity {
 
             discoveredDevice = null;
 
-            Handler handler = new Handler();
-
             AsyncTask.execute(() -> {
                 if (ActivityCompat.checkSelfPermission(activity.getApplicationContext()
                         , Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_DENIED) {
@@ -313,7 +322,14 @@ public class LocatorActivity extends AppCompatActivity {
                 }
             });
 
-            handler.postDelayed(this::stopScanning, SCAN_PERIOD);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    stopScanning();
+                }
+            }, SCAN_PERIOD);
+//            handler = new Handler();
+//            handler.postDelayed(this::stopScanning, SCAN_PERIOD);
         }
 
         /* Ukonceni skenovani. */
@@ -343,47 +359,22 @@ public class LocatorActivity extends AppCompatActivity {
         }
     }
 
-    public static class Util {
+    public static class LocatorWorker extends Worker {
 
-        // schedule the start of the service every 10 - 30 seconds
-        public static void scheduleJob(Context context) {
-            ComponentName serviceComponent = new ComponentName(context, LocatorJobService.class);
-            JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
+        public LocatorWorker(@NonNull Context appContext, @NonNull WorkerParameters workerParams) {
+            super(appContext, workerParams);
+        }
+
+        @NonNull
+        @Override
+        public Result doWork() {
+            Log.d("TAG", "Poustim to znovu.");
             if (network != null && network.intialize()) {
                 network.startScanning();
+                return Result.success();
             }
-            builder.setMinimumLatency(1000); // wait at least
-            builder.setOverrideDeadline(18000);
-            builder.setRequiresDeviceIdle(true); // device should be idle
-            builder.setRequiresCharging(false); // we don't care if the device is charging or not
-            builder.build();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.d("BLE", "Zavolal jsem to.");
-                JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
-                jobScheduler.schedule(builder.build());
-            }
+            return Result.retry();
         }
-
-    }
-
-    public static class LocatorJobService extends JobService {
-        @Override
-        public boolean onStartJob(JobParameters params) {
-            Log.d("BLE", "Vzbudil jsem se.");
-            Intent service = new Intent(getApplicationContext(), LocatorJobService.class);
-            getApplicationContext().startService(service);
-//            if (network.intialize()) {
-//                network.startScanning();
-//            }
-            Util.scheduleJob(getApplicationContext()); // reschedule the job
-            return true;
-        }
-
-        @Override
-        public boolean onStopJob(JobParameters params) {
-            return true;
-        }
-
     }
 
     /**
@@ -427,18 +418,38 @@ public class LocatorActivity extends AppCompatActivity {
         network = new BTNetwork();
 
         searchButton.setOnClickListener(view -> {
-            Util.scheduleJob(activity.getApplicationContext());
+            workManager = WorkManager.getInstance(this);
+            PeriodicWorkRequest periodicWorkRequest =
+                    new PeriodicWorkRequest
+                            .Builder(LocatorWorker.class, 15, TimeUnit.MINUTES)
+                            .addTag(TAG_LOCATOR)
+                            .setBackoffCriteria(BackoffPolicy.LINEAR,
+                                    PeriodicWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                            .build();
+            workManager.cancelUniqueWork("LOCATOR_WORK");
+            workManager.enqueueUniquePeriodicWork(
+                    "LOCATOR_WORK",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    periodicWorkRequest
+            );
+            //Util.scheduleJob(activity.getApplicationContext());
             setClickabiltyDisconnectButton(false);
             setClickabiltySearchButton(false);
-            Log.d("THREAD_START", "Vlakno pro lokator bylo spusteno.");
         });
 
         disconnectButton.setOnClickListener(view -> {
             Log.d("SCAN", "Koncim.");
-            network.disconnectDevice();
+            if (network != null) {
+                network.disconnectDevice();
+            }
+
+            if (workManager != null) {
+                Log.d("SCAN", "Koncim worker.");
+                workManager.cancelUniqueWork("LOCATOR_WORK");
+            }
+
             setClickabiltyDisconnectButton(false);
             setClickabiltySearchButton(true);
-            Log.d("THREAD_CANCEL", "Vlakno pro lokator bylo ukonceno.");
         });
 
         homeButton.setOnClickListener(view -> {
@@ -446,9 +457,17 @@ public class LocatorActivity extends AppCompatActivity {
         });
 
         stopButton.setOnClickListener(view -> {
-            network.stopScanning();
+            if (network != null) {
+                network.stopScanning();
+            }
+
+            if (workManager != null) {
+                Log.d("SCAN", "Koncim worker.");
+                workManager.cancelUniqueWork("LOCATOR_WORK");
+            }
+
             setClickabiltySearchButton(true);
-            Log.d("THREAD_CANCEL", "Vlakno pro lokator bylo ukonceno stop buttonem.");
+            setClickabiltyDisconnectButton(false);
         });
 
         mapButton.setOnClickListener(view -> {
@@ -465,10 +484,8 @@ public class LocatorActivity extends AppCompatActivity {
 
     public void openMapActivity() {
         Intent intent = new Intent(LocatorActivity.this, MapLocationActivity.class);
-//        Bundle b = new Bundle();
         intent.putExtra("lat", Double.valueOf(lat).toString());
         intent.putExtra("lon", Double.valueOf(lon).toString());
-//        b.putDouble("lon", 60);
         startActivity(intent);
         finish();
     }

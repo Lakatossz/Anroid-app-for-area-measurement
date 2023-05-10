@@ -27,15 +27,10 @@ public class MapLocationActivity extends FragmentActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            Bundle b = getIntent().getExtras();
-            if (b != null) {
-                lat = Double.parseDouble(b.getString("lat"));
-                lon = Double.parseDouble(b.getString("lon"));
-            }
-        } else {
-            lat = (double) savedInstanceState.getSerializable("lat");
-            lon = (double) savedInstanceState.getSerializable("lon");
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            lat = Double.parseDouble(b.getString("lat"));
+            lon = Double.parseDouble(b.getString("lon"));
         }
 
         setContentView(R.layout.activity_map_location);
@@ -75,7 +70,9 @@ public class MapLocationActivity extends FragmentActivity implements OnMapReadyC
 
     public void openLocatorActivity() {
         Intent intent = new Intent(MapLocationActivity.this, LocatorActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.putExtra("lat", Double.valueOf(lat).toString());
+//        intent.putExtra("lon", Double.valueOf(lon).toString());
         startActivity(intent);
     }
 }
