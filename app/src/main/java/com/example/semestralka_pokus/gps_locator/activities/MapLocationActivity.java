@@ -22,7 +22,7 @@ public class MapLocationActivity extends FragmentActivity implements OnMapReadyC
 
     private double lat = 50, lon = 50;
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +39,8 @@ public class MapLocationActivity extends FragmentActivity implements OnMapReadyC
         TextView latValue = findViewById(R.id.map_lattitude);
         TextView longLabel = findViewById(R.id.map_tv_long_label);
         TextView latLabel = findViewById(R.id.map_tv_lat_label);
-        longValue.setText(String.valueOf(lon));
-        latValue.setText(String.valueOf(lat));
+        longValue.setText(String.format("%.5f", lon));
+        latValue.setText(String.format("%.5f", lat));
         longLabel.setText("Zemepisna delka");
         latLabel.setText("Zemepisna sirka");
 
@@ -70,9 +70,9 @@ public class MapLocationActivity extends FragmentActivity implements OnMapReadyC
 
     public void openLocatorActivity() {
         Intent intent = new Intent(MapLocationActivity.this, LocatorActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.putExtra("lat", Double.valueOf(lat).toString());
-//        intent.putExtra("lon", Double.valueOf(lon).toString());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("lat", Double.valueOf(lat).toString());
+        intent.putExtra("lon", Double.valueOf(lon).toString());
         startActivity(intent);
     }
 }

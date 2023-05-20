@@ -386,6 +386,12 @@ public class LocatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locator);
 
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            lat = Float.parseFloat(b.getString("lat"));
+            lon = Float.parseFloat(b.getString("lon"));
+        }
+
         TextView label = findViewById(R.id.label);
         TextView longLabel = findViewById(R.id.tv_long_label);
         longValue = findViewById(R.id.tv_long);
@@ -408,8 +414,8 @@ public class LocatorActivity extends AppCompatActivity {
         longLabel.setText("Zemepisna delka");
         latLabel.setText("Zemepisna sirka");
         timeLabel.setText("Datum a cas");
-        longValue.setText(String.valueOf(0.0));
-        latValue.setText(String.valueOf(0.0));
+        longValue.setText(String.valueOf(lon));
+        latValue.setText(String.valueOf(lat));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             timeValue.setText(String.valueOf(LocalDateTime.now()
                     .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))));
@@ -479,6 +485,8 @@ public class LocatorActivity extends AppCompatActivity {
     public void openHomeActivity() {
         Intent intent = new Intent(LocatorActivity.this, WelcomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("lat", Double.valueOf(lat).toString());
+        intent.putExtra("lon", Double.valueOf(lon).toString());
         startActivity(intent);
     }
 
@@ -506,11 +514,12 @@ public class LocatorActivity extends AppCompatActivity {
         disconnectButton.setClickable(clickabilty);
     }
 
+    @SuppressLint("DefaultLocale")
     public void setLocation(float longitude, float latitude) {
         lon = longitude;
         lat = latitude;
-        longValue.setText(String.valueOf((double) longitude));
-        latValue.setText(String.valueOf((double) latitude));
+        longValue.setText(String.format("%.5f", longitude));
+        latValue.setText(String.format("%.5f", latitude));
     }
 
     public void setTime(LocalDateTime dateTime) {

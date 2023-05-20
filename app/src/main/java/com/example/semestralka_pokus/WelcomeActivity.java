@@ -22,6 +22,7 @@ import com.example.semestralka_pokus.measure.MeasureActivity;
 public class WelcomeActivity extends AppCompatActivity {
 
     public Button newButton, fieldsButton, locatorButton;
+    private double lat = 0, lon = 0;
 
     /**
      * Zobrazi uvodni aktivitu aplikace.
@@ -31,6 +32,12 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            lat = Double.parseDouble(b.getString("lat"));
+            lon = Double.parseDouble(b.getString("lon"));
+        }
 
         newButton = findViewById(R.id.newButton);
         newButton.setOnClickListener(v -> openMeasureActivity());
@@ -68,6 +75,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void openLocatorActivity() {
         Intent intent = new Intent(this, LocatorActivity.class);
+        intent.putExtra("lat", Double.valueOf(lat).toString());
+        intent.putExtra("lon", Double.valueOf(lon).toString());
         Toast.makeText(this, "Přepnul jsem do Tracker modu.", Toast.LENGTH_LONG).show();
         startActivity(intent);
     }
